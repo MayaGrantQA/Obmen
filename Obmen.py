@@ -4,7 +4,23 @@ from tkinter import *
 from tkinter import messagebox as mb
 
 
+def exchange():
+    code = entry.get()
 
+    if code:
+        try:
+            responce = requests.get('https://open.er-api.com/v6/latest/USD')
+            responce.raise_for_status()
+            data = responce.json()
+            if code in data['rates']:
+                exchange_rate = data['rates'][code]
+                mb.showinfo('Курс обмена', f'Курс: {exchange_rate} {code} за 1 доллар')
+            else:
+                mb.showerror('Ошибка!', "Валюта с таким кодом не найдена")
+        except Exception as e:
+            mb.showerror("Ошибка", f"Произошла ошибка: {e}")
+    else:
+        mb.showwarning("Внимание!", 'Введите код валюты')
 
 
 window = Tk()
